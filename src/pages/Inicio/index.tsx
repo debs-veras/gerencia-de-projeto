@@ -5,10 +5,12 @@ import { useForm } from "react-hook-form";
 import { typeSelectOptions } from "../../types/select.d";
 import Botao from "../../components/Button";
 import Card from "../../components/Card";
-
+import ModalCadastroProjeto from "../../components/ModalCadastroProjeto";
+import { MdAdd } from "react-icons/md";
 
 export default function Inicio() {
   const methods = useForm();
+  const [adicionarProjetoOpen, setAdicionarProjetoOpen] = useState<boolean>(false);
   const [opcoesSelectPrioridade] = useState<Array<typeSelectOptions>>([
     {
       value: 1,
@@ -38,6 +40,10 @@ export default function Inicio() {
       label: "Box3",
     },
   ]);
+
+  const handleNovoProjeto = () => {
+    setAdicionarProjetoOpen(true);
+  }
 
   return (
     <BoxContainer>
@@ -105,18 +111,22 @@ export default function Inicio() {
               </div>
             </div>
             <div className="flex flex-col lg:flex-row gap-4 mt-2 lg:mt-0">
-              <Botao texto="Adicionar" tipo="sucesso" />
+              <Botao texto="Adicionar" tipo="sucesso"  icone={<MdAdd color="white" size={20} onClick={handleNovoProjeto}/> }/>
             </div>
           </div>
         </div>
         <div className="md:grid-cols-4 grid grid-cols-1 gap-4 items-start">
-
           <Card></Card>
           <Card></Card>
           <Card></Card>
           <Card></Card>
         </div>
       </Box>
+
+      <ModalCadastroProjeto
+        open={adicionarProjetoOpen}
+        setOpen={setAdicionarProjetoOpen}
+      />
     </BoxContainer>
   );
 }
