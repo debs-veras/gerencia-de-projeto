@@ -3,42 +3,41 @@ import Box, { BoxContainer } from "../../components/Box";
 import Formulario from "../../components/Input";
 import { useForm } from "react-hook-form";
 import { typeSelectOptions } from "../../types/select.d";
+import Botao from "../../components/Button";
+import Card from "../../components/Card";
+
 
 export default function Inicio() {
   const methods = useForm();
-  const [opcoesSelectPrioridade] = useState<Array<typeSelectOptions>>(
-    [
-      {
-        value: 1,
-        label: 'Alta'
-      },
-      {
-        value: 2,
-        label: 'Média'
-      },
-      {
-        value: 3,
-        label: 'Baixa'
-      }
-    ]
-  );
+  const [opcoesSelectPrioridade] = useState<Array<typeSelectOptions>>([
+    {
+      value: 1,
+      label: "Alta",
+    },
+    {
+      value: 2,
+      label: "Média",
+    },
+    {
+      value: 3,
+      label: "Baixa",
+    },
+  ]);
 
-  const [opcoesParticipantes] = useState<Array<typeSelectOptions>>(
-    [
-      {
-        value: 1,
-        label: 'Débora'
-      },
-      {
-        value: 2,
-        label: 'João'
-      },
-      {
-        value: 3,
-        label: 'Box3'
-      }
-    ]
-  );
+  const [opcoesParticipantes] = useState<Array<typeSelectOptions>>([
+    {
+      value: 1,
+      label: "Débora",
+    },
+    {
+      value: 2,
+      label: "João",
+    },
+    {
+      value: 3,
+      label: "Box3",
+    },
+  ]);
 
   return (
     <BoxContainer>
@@ -60,8 +59,8 @@ export default function Inicio() {
             isFiltro
             register={methods.register}
           />
-           
-           <Formulario.InputPeriodo
+
+          <Formulario.InputPeriodo
             name="periodo"
             label="Período"
             opcional={true}
@@ -75,7 +74,7 @@ export default function Inicio() {
             control={methods.control}
             opcional={true}
             options={opcoesParticipantes}
-            className='col-span-1'
+            className="col-span-1"
             isFiltro={true}
             labelOpcaoPadrao={"Todos"}
             placeholder={"Todos"}
@@ -87,12 +86,36 @@ export default function Inicio() {
             control={methods.control}
             opcional={true}
             options={opcoesSelectPrioridade}
-            className='col-span-1'
+            className="col-span-1"
             isFiltro={true}
             labelOpcaoPadrao={"Todos"}
             placeholder={"Todos"}
           />
         </Formulario>
+      </Box>
+
+      <Box>
+        <div className="border-b">
+          <div className="sm:flex pb-4 sm:items-center border-gray-200">
+            <div className="sm:flex-auto">
+              <div className="flex flex-row items-center gap-2">
+                <h1 className="font-semibold text-primary-900 text-lg">
+                  Projetos
+                </h1>
+              </div>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-4 mt-2 lg:mt-0">
+              <Botao texto="Adicionar" tipo="sucesso" />
+            </div>
+          </div>
+        </div>
+        <div className="md:grid-cols-4 grid grid-cols-1 gap-4 items-start">
+
+          <Card></Card>
+          <Card></Card>
+          <Card></Card>
+          <Card></Card>
+        </div>
       </Box>
     </BoxContainer>
   );

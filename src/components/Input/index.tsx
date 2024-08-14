@@ -63,7 +63,6 @@ type propsFormulario = {
     onSubimit?: FormEventHandler<HTMLFormElement>;
 }
 
-
 export default function Formulario({ className, children, align = "end" }: propsFormulario): JSX.Element {
     return (
         <Form.Root

@@ -88,7 +88,7 @@ Content.Titulo = ({ children, className }: { children: React.ReactNode; classNam
     <h2
       id="applicant-information-title"
       className={classNames(
-        "text-lg leading-6 font-medium text-gray-900",
+        "text-lg leading-6 font-medium text-primary-900",
         className
       )}
     >
