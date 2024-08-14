@@ -1,0 +1,53 @@
+{
+  "usuarios": [
+    { 
+        "id": 1, 
+        "nome": "Débora", 
+        "email":"debora@gmail.com", 
+        "ativo": true, 
+        "senha":"1234", 
+        "confirmacaoSenha":"1234" },
+    { 
+        "id": 1, 
+        "nome": "box3", 
+        "email":"box3@gmail.com", 
+        "ativo": true, 
+        "senha":"1234", 
+        "confirmacaoSenha":"1234" 
+    }
+  ],
+  "projetos": [
+    { 
+        "id": 1, 
+        "titulo": "Gerência de Projetos", 
+        "descricao":"Todas estas questões, devidamente ponderadas, levantam dúvidas sobre se o comprometimento entre as equipes nos obriga à análise do investimento em reciclagem técnica.", 
+        "prioridade":"Alta", 
+        "participantes": [
+            { 
+                "id": 1, 
+                "nome": "Débora", 
+                "email":"debora@gmail.com", 
+                "ativo": true, "senha":"1234", 
+                "confirmacaoSenha":"1234" 
+            }
+        ]
+    }
+  ],
+  "atividades": [
+    { 
+        "id": 1,
+        "titulo": "Desenvolvimento do front-end",
+        "descricao":"Todavia, o aumento do diálogo entre os diferentes setores produtivos apresenta tendências no sentido de aprovar a manutenção das diversas correntes de pensamento.", 
+        "horarioInicio": "14:30",
+        "horarioFim": "17:30",
+        "idParticipante": 1,
+        "participante":{ 
+            "id": 1, 
+            "nome": "Débora", 
+            "email":"debora@gmail.com", 
+            "ativo": true, 
+            "senha":"1234", 
+            "confirmacaoSenha":"1234" 
+        }
+  }]
+}

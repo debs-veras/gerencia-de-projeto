@@ -188,6 +188,7 @@ Formulario.InputPeriodo = (props: propsField & propsInput) => {
     </Formulario.Field>
   );
 };
+
 Formulario.InputData = (props: propsField & propsInput) => {
   const { control } = props;
   const { ...propsField }: propsField = props;
@@ -450,3 +451,31 @@ Formulario.TextArea = (props: propsField & propsInput): JSX.Element => {
     </Formulario.Field>
   );
 };
+
+Formulario.InputHorario = (props: propsField & propsInput) => {
+  const { register } = props;
+  const { ...propsField }: propsField = props;
+  const { ...propsInput }: propsInput = props;
+
+  return (
+      <Formulario.Field {...propsField}>
+          <>
+              <input
+                  id={propsInput.isFiltro ? `filtro_${propsField.name}` : propsField.name}
+                  type="time"
+                  disabled={propsInput.disabled}
+                  name={propsField.name}
+                  min={propsInput.min != null && typeof propsInput.min != "object" ? propsInput.min : ""}
+                  max={propsInput.max != null && typeof propsInput.max != "object" ? propsInput.max : ""}
+                  placeholder={propsInput.placeholder}
+                  onKeyDown={propsInput.onKeyDown && propsInput.onKeyDown}
+                  className={`${propsField.icone || propsInput.copyClipboard ? (propsInput.copyClipboard ? "rounded-l-md border-r-0" : "rounded-r-md") : "rounded-md"} w-full border border-gray-300 shadow-sm py-2 px-3 disabled:bg-gray-100 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-transparent`}
+                  {...register && register(propsField.name)}
+                  onChange={e => {
+                      register && register(propsField.name).onChange(e);
+                  }}
+              />
+          </>
+      </Formulario.Field>
+  )
+}

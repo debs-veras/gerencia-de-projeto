@@ -61,11 +61,8 @@ const Botao = forwardRef((props: Props, _) => {
 
                 {!!texto && <span className={classNames(classNameText)}>{texto}</span>}
                 {children}
-
-                
             </div>
         </button>
-
     )
 }
 )

@@ -42,7 +42,7 @@ export default function ModalCadastroProjeto(props: Props) {
       open={open}
       setOpen={setOpen}
       tipo="sucesso"
-      widthClassName="max-w-7xl w-6/12 h-[85vh] !p-0"
+      widthClassName="max-w-7xl w-6/12 h-[100vh] !p-0"
     >
       <Box className="w-full p-4 w rounded-tl-lg-md rounded-b-none">
         <Box.Header padding="pb-0" semLinha>
@@ -118,7 +118,7 @@ export default function ModalCadastroProjeto(props: Props) {
             />
             
           </div>
-          <ScrollArea className="h-72">
+          <ScrollArea className="h-64">
             <div className="w-full my-2 border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
               <div className="flex items-center justify-between border-b-2">
                 <span className="text-lg text-primary-800 font-semibold">
