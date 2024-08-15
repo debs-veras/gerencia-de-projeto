@@ -7,6 +7,7 @@ import Modal from "../../components/Modal";
 import useToastLoading from "../../hooks/useToastLoading";
 import { deleteProjeto } from "../../service/http-provider";
 import { useState } from "react";
+import ModalCadastroProjeto from "../ModalCadastroProjeto";
 
 type Props = {
   projeto: projeto;
@@ -15,7 +16,9 @@ type Props = {
 
 export default function Card(props: Props) {
   const [confirmacaoDeletar, setConfirmacaoDeletar] = useState<boolean>(false);
+  const [editarProjetoOpen, setEditarProjetoOpen] = useState<boolean>(false);
   const toast = useToastLoading();
+
   function receberTag(prioridade: string) {
     if (prioridade === "Alta") return "error";
     else if (prioridade === "Média") return "alert";
@@ -27,14 +30,12 @@ export default function Card(props: Props) {
 
     const response = await deleteProjeto(props.projeto.id);
 
-    if (response != null) {
-      console.log('entrou')
+    if (response) {
       toast({
         mensagem: "Projeto deletado com sucesso.",
         tipo: response.tipo,
       });
       props.onRelonding();
-
     } else {
       toast({
         mensagem: response.mensagem,
@@ -42,6 +43,11 @@ export default function Card(props: Props) {
       });
     }
   }
+
+  const handleEditarProjeto = () => {
+    setEditarProjetoOpen(true);
+  };
+
   return (
     <>
       <div className="w-full border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
@@ -51,11 +57,11 @@ export default function Card(props: Props) {
           </span>
           <span className="text-primary-700 font-semibold">
             <MenuDropdown>
-              {/* <MenuDropdown.Opcao
+              <MenuDropdown.Opcao
                 tipo="editar"
-                ativo={verificaEditar(itensAcesso)}
-                acaoBotao={() => handleEditarCurso(item)}
-              /> */}
+                ativo={true}
+                acaoBotao={() => handleEditarProjeto()}
+              />
               <MenuDropdown.Opcao
                 tipo="excluir"
                 ativo={true}
@@ -69,7 +75,7 @@ export default function Card(props: Props) {
 
         <div className="flex items-center justify-between text-xs my-1">
           <div className="font-semibold">
-            40hrs | Total de atividades: {props.projeto.atividades?.length}
+            40hrs | Total de atividades: {props.projeto.atividades?.length || 0}
           </div>
           <span className="text-primary-700 font-semibold">
             {formatarData(props.projeto.dataCadastro || "", "data")}
@@ -106,10 +112,10 @@ export default function Card(props: Props) {
             </div>
           </div>
           <Tag
-            status={receberTag(props.projeto.prioridade)}
+            status={receberTag(props.projeto.prioridade.label)}
             className="px-4 py-1"
           >
-            {props.projeto.prioridade}
+            {props.projeto.prioridade.label}
           </Tag>
         </div>
       </div>
@@ -123,6 +129,13 @@ export default function Card(props: Props) {
           <Modal.BotaoCancelar />
         </Modal.ContainerBotoes>
       </Modal>
+
+      <ModalCadastroProjeto
+        id={props.projeto.id}
+        open={editarProjetoOpen}
+        setOpen={setEditarProjetoOpen}
+        onRelonding={props.onRelonding}
+      />
     </>
   );
 }

@@ -3,22 +3,39 @@ import Formulario from "../../components/Input";
 import Box from "../Box";
 import { useForm } from "react-hook-form";
 import { typeSelectOptions } from "../../types/select.d";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Avatar from "@radix-ui/react-avatar";
 import Botao from "../Button";
 import { MdAdd } from "react-icons/md";
 import ScrollArea from "../ScrollArea";
 import ModalCadastroAtividade from "../ModalCadastroAtividade";
+import { projeto } from "../../types/projeto.d";
+import {
+  getProjetoById,
+  postProjeto,
+  putProjeto,
+} from "../../service/http-provider";
+import useToastLoading from "../../hooks/useToastLoading";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  id?: number;
+  onRelonding: () => void;
 };
 
 export default function ModalCadastroProjeto(props: Props) {
-  const { open, setOpen } = props;
-  const methods = useForm();
-  const [adicionarAtividadeOpen, setAdicionarAtividadeOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { open, setOpen, id } = props;
+  const toast = useToastLoading();
+  const [loading, setLoading] = useState<boolean>(true);
+  const { handleSubmit, register, control, reset, getValues, setValue } =
+    useForm<projeto>();
+  const [salvando, setSalvando] = useState<boolean>(false);
+  const [adicionarAtividadeOpen, setAdicionarAtividadeOpen] =
+    useState<boolean>(false);
+  const [dadosProjeto, setDadosProjeto] = useState<projeto>();
   const [opcoesSelectPrioridade] = useState<Array<typeSelectOptions>>([
     {
       value: 1,
@@ -33,8 +50,45 @@ export default function ModalCadastroProjeto(props: Props) {
       label: "Baixa",
     },
   ]);
+
   const handleNovaAtividade = () => {
     setAdicionarAtividadeOpen(true);
+  };
+
+  useEffect(() => {
+    if (!!id) carregarDadosCurso();
+    else setLoading(false);
+  }, []);
+
+  async function carregarDadosCurso() {
+    setLoading(true);
+    const response = await getProjetoById(Number(id));
+
+    if (response) {
+      setDadosProjeto(response);
+      reset({ ...response });
+    } else toast({ tipo: response.tipo, mensagem: response.mensagem });
+
+    setLoading(false);
+  }
+
+  async function cadastrarProjeto() {
+    setSalvando(true);
+    let dadosCadastro: projeto;
+    await handleSubmit((dadosForm) => { dadosCadastro = { ...dadosForm, dataCadastro: new Date() }; })();
+
+    const request = () =>
+      dadosProjeto?.id ? putProjeto(dadosCadastro) : postProjeto(dadosCadastro);
+    const response = await request();
+
+    if (response) {
+      toast({ tipo: "success", mensagem: "Projeto cadastrado com sucesso!" });
+      props.onRelonding();
+      navigate(`/`);
+    } else toast({ tipo: response.tipo, mensagem: response.mensagem });
+
+    setSalvando(false);
+    setOpen(false);
   }
 
   return (
@@ -58,27 +112,28 @@ export default function ModalCadastroProjeto(props: Props) {
             opcional={false}
             className="col-span-1"
             isFiltro
-            register={methods.register}
+            register={register}
+            lowercase
           />
 
           <Formulario.TextArea
             name="descricao"
             label="Descrição"
             opcional={false}
-            register={methods.register}
+            register={register}
             className="col-span-1"
           />
 
           <Formulario.InputSelect
             name={"prioridade"}
             label={"Prioridade"}
-            control={methods.control}
+            control={control}
             opcional={false}
             options={opcoesSelectPrioridade}
             className="col-span-1"
-            isFiltro={true}
-            labelOpcaoPadrao={"Todos"}
-            placeholder={"Todos"}
+            isFiltro={false}
+            labelOpcaoPadrao={"Selecione"}
+            placeholder={"Selecione"}
           />
 
           <div className="flex items-center justify-between">
@@ -110,132 +165,71 @@ export default function ModalCadastroProjeto(props: Props) {
                 </div>
               </div>
             </div>
+
             <Botao
               texto="Nova Atividade"
               tipo="sucesso"
               icone={<MdAdd color="white" size={20} />}
               onClick={handleNovaAtividade}
             />
-            
           </div>
-          <ScrollArea className="h-64">
-            <div className="w-full my-2 border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
-              <div className="flex items-center justify-between border-b-2">
-                <span className="text-lg text-primary-800 font-semibold">
-                  Gerência de Projeto
-                </span>
-                <span className="text-primary-700 font-semibold">
-                  01-01-2001
-                </span>
-              </div>
 
-              <div className="text-xs py-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-                ut ad qui totam laboriosam fuga alias, beatae.
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-xs font-semibold">40hrs | 08h - 12h</div>
-                <Avatar.Root className="mt-2 bg-gray-100 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-                  <Avatar.Image
-                    className="h-full w-full rounded-[inherit] object-cover"
-                    src={"imagens/user.png"}
-                    alt="Foto Usuário"
-                  />
-                </Avatar.Root>
-              </div>
+          {/* <ScrollArea className="h-60">
+          {listaProjetos.length > 0 && listaProjetos.map((item: projeto) => {
+            return 
+            <div className="w-full my-2 border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
+            <div className="flex items-center justify-between border-b-2">
+              <span className="text-lg text-primary-800 font-semibold">
+                Gerência de Projeto
+              </span>
+              <span className="text-primary-700 font-semibold">
+                01-01-2001
+              </span>
             </div>
 
-            <div className="w-full my-2 border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
-              <div className="flex items-center justify-between border-b-2">
-                <span className="text-lg text-primary-800 font-semibold">
-                  Gerência de Projeto
-                </span>
-                <span className="text-primary-700 font-semibold">
-                  01-01-2001
-                </span>
-              </div>
-
-              <div className="text-xs py-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-                ut ad qui totam laboriosam fuga alias, beatae.
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-xs font-semibold">40hrs | 08h - 12h</div>
-                <Avatar.Root className="mt-2 bg-gray-100 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-                  <Avatar.Image
-                    className="h-full w-full rounded-[inherit] object-cover"
-                    src={"imagens/user.png"}
-                    alt="Foto Usuário"
-                  />
-                </Avatar.Root>
-              </div>
+            <div className="text-xs py-2">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
+              ut ad qui totam laboriosam fuga alias, beatae.
             </div>
-
-            <div className="w-full my-2 border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
-              <div className="flex items-center justify-between border-b-2">
-                <span className="text-lg text-primary-800 font-semibold">
-                  Gerência de Projeto
-                </span>
-                <span className="text-primary-700 font-semibold">
-                  01-01-2001
-                </span>
-              </div>
-
-              <div className="text-xs py-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-                ut ad qui totam laboriosam fuga alias, beatae.
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-xs font-semibold">40hrs | 08h - 12h</div>
-                <Avatar.Root className="mt-2 bg-gray-100 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-                  <Avatar.Image
-                    className="h-full w-full rounded-[inherit] object-cover"
-                    src={"imagens/user.png"}
-                    alt="Foto Usuário"
-                  />
-                </Avatar.Root>
-              </div>
+            <div className="flex items-center justify-between">
+              <div className="text-xs font-semibold">40hrs | 08h - 12h</div>
+              <Avatar.Root className="mt-2 bg-gray-100 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle">
+                <Avatar.Image
+                  className="h-full w-full rounded-[inherit] object-cover"
+                  src={"imagens/user.png"}
+                  alt="Foto Usuário"
+                />
+              </Avatar.Root>
             </div>
+          </div>;
+          })}
+            
+          </ScrollArea> */}
 
-            <div className="w-full my-2 border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
-              <div className="flex items-center justify-between border-b-2">
-                <span className="text-lg text-primary-800 font-semibold">
-                  Gerência de Projeto
-                </span>
-                <span className="text-primary-700 font-semibold">
-                  01-01-2001
-                </span>
-              </div>
-
-              <div className="text-xs py-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-                ut ad qui totam laboriosam fuga alias, beatae.
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-xs font-semibold">40hrs | 08h - 12h</div>
-                <Avatar.Root className="mt-2 bg-gray-100 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-                  <Avatar.Image
-                    className="h-full w-full rounded-[inherit] object-cover"
-                    src={"imagens/user.png"}
-                    alt="Foto Usuário"
-                  />
-                </Avatar.Root>
-              </div>
-            </div>
-          </ScrollArea>
           <Botao
+            carregando={salvando}
             texto="Cancelar"
             tipo="padrao"
             onClick={() => setOpen(false)}
           />
 
-          <Botao texto="Salvar" tipo="sucesso" />
+          <Botao
+            carregando={salvando}
+            onClick={() => cadastrarProjeto()}
+            texto={!!id ? "Salvar alterações" : "Cadastrar Projeto"}
+            tipo="sucesso"
+          />
         </Formulario>
       </Box>
 
       <ModalCadastroAtividade
         open={adicionarAtividadeOpen}
         setOpen={setAdicionarAtividadeOpen}
+        // control={control}
+        // disabled={salvando}
+        // register={register}
+        // getValues={getValues}
+        // setValue={setValue}
       />
     </Modal>
   );

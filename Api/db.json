@@ -1,7 +1,7 @@
 {
   "usuarios": [
     {
-      "id": 1,
+      "id": "1",
       "nome": "Débora",
       "email": "debora@gmail.com",
       "ativo": true,
@@ -9,7 +9,7 @@
       "confirmacaoSenha": "1234"
     },
     {
-      "id": 2,
+      "id": "2",
       "nome": "box3",
       "email": "box3@gmail.com",
       "ativo": true,
@@ -19,11 +19,16 @@
   ],
   "projetos": [
     {
-      "id": 3,
-      "titulo": "Gerência de Projetos",
+      "id": "3",
+      "titulo": "Gerência de Projeto",
       "descricao": "Todas estas questões, devidamente ponderadas, levantam dúvidas sobre se o comprometimento entre as equipes nos obriga à análise do investimento em reciclagem técnica.",
-      "prioridade": "Alta",
-      "dataCadastro": "2024-07-18T13:59:04.914Z",
+      "prioridade": {
+        "value": 3,
+        "label": "Baixa"
+      },
+      "prioridadeId": 3,
+      "dataCadastro": "2024-08-15T01:40:06.828Z",
+      "totalHrsAtividade": 40,
       "participantes": [
         {
           "id": 1,
@@ -52,11 +57,33 @@
           }
         }
       ]
+    },
+    {
+      "id": "2d54",
+      "titulo": "gct",
+      "descricao": "gctcgt",
+      "prioridade": {
+        "value": 1,
+        "label": "Alta"
+      },
+      "prioridadeId": 1,
+      "dataCadastro": "2024-08-15T01:37:15.116Z"
+    },
+    {
+      "id": "25d5",
+      "titulo": "fff",
+      "descricao": "fff",
+      "prioridade": {
+        "value": 1,
+        "label": "Alta"
+      },
+      "prioridadeId": 1,
+      "dataCadastro": "2024-08-15T01:38:38.360Z"
     }
   ],
   "atividades": [
     {
-      "id": 4,
+      "id": "4",
       "titulo": "Desenvolvimento do front-end",
       "descricao": "Todavia, o aumento do diálogo entre os diferentes setores produtivos apresenta tendências no sentido de aprovar a manutenção das diversas correntes de pensamento.",
       "horarioInicio": "14:30",

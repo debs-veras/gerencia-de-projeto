@@ -147,6 +147,7 @@ export default function Inicio() {
       <ModalCadastroProjeto
         open={adicionarProjetoOpen}
         setOpen={setAdicionarProjetoOpen}
+        onRelonding={ carregaProjetos }
       />
     </BoxContainer>
   );

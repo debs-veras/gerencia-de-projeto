@@ -6,8 +6,10 @@ export type projeto = {
   id: number;
   titulo: string;
   descricao: string;
-  prioridade: string;
+  prioridade: typeSelectOptions;
+  prioridadeId: number
   dataCadastro: Date,
+  totalHrsAtividade?: number;
   participantes?: Array<usuario>;
   atividades?: Array<atividade>;
 };
