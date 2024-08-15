@@ -6,6 +6,8 @@ export type atividade = {
   descricao: string;
   horarioInicio: string;
   horarioFim: string;
+  totalHoras: number;
+  dataCadastro: Date;
   idParticipante: number;
   participante: usuario;
 };

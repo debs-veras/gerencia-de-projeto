@@ -2,7 +2,7 @@
   "usuarios": [
     {
       "id": "1",
-      "nome": "Débora",
+      "nome": "Débora Hellen",
       "email": "debora@gmail.com",
       "ativo": true,
       "senha": "1234",
@@ -23,11 +23,11 @@
       "titulo": "Gerência de Projeto",
       "descricao": "Todas estas questões, devidamente ponderadas, levantam dúvidas sobre se o comprometimento entre as equipes nos obriga à análise do investimento em reciclagem técnica.",
       "prioridade": {
-        "value": 3,
-        "label": "Baixa"
+        "value": 1,
+        "label": "Alta"
       },
-      "prioridadeId": 3,
-      "dataCadastro": "2024-08-15T01:40:06.828Z",
+      "prioridadeId": 1,
+      "dataCadastro": "2024-08-15T14:59:06.227Z",
       "totalHrsAtividade": 40,
       "participantes": [
         {
@@ -41,12 +41,14 @@
       ],
       "atividades": [
         {
-          "id": 1,
+          "id": 4,
           "titulo": "Desenvolvimento do front-end",
           "descricao": "Todavia, o aumento do diálogo entre os diferentes setores produtivos apresenta tendências no sentido de aprovar a manutenção das diversas correntes de pensamento.",
           "horarioInicio": "14:30",
           "horarioFim": "17:30",
           "idParticipante": 1,
+          "totalHoras": 20,
+          "dataCadastro": "2024-08-15T14:59:06.227Z",
           "participante": {
             "id": 1,
             "nome": "Débora",
@@ -57,28 +59,6 @@
           }
         }
       ]
-    },
-    {
-      "id": "2d54",
-      "titulo": "gct",
-      "descricao": "gctcgt",
-      "prioridade": {
-        "value": 1,
-        "label": "Alta"
-      },
-      "prioridadeId": 1,
-      "dataCadastro": "2024-08-15T01:37:15.116Z"
-    },
-    {
-      "id": "25d5",
-      "titulo": "fff",
-      "descricao": "fff",
-      "prioridade": {
-        "value": 1,
-        "label": "Alta"
-      },
-      "prioridadeId": 1,
-      "dataCadastro": "2024-08-15T01:38:38.360Z"
     }
   ],
   "atividades": [

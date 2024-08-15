@@ -43,6 +43,7 @@ export default function Inicio() {
     },
   ]);
   const [listaProjetos, setListaProjetos] = useState<Array<projeto>>([]);
+  
   // const { watch, handleSubmit, register, control } = useForm<cursoFiltrosListagem>();
 
   const handleNovoProjeto = () => {

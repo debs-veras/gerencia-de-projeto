@@ -1,7 +1,7 @@
 import Modal from "../../components/Modal";
 import Formulario from "../../components/Input";
 import Box from "../Box";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { typeSelectOptions } from "../../types/select.d";
 import { useEffect, useState } from "react";
 import * as Avatar from "@radix-ui/react-avatar";
@@ -17,6 +17,9 @@ import {
 } from "../../service/http-provider";
 import useToastLoading from "../../hooks/useToastLoading";
 import { useNavigate } from "react-router-dom";
+import { atividade } from "../../types/atividade.d";
+import { formatarData } from "../../utils/data";
+import MenuDropdown from "../MenuDropdown";
 
 type Props = {
   open: boolean;
@@ -30,12 +33,16 @@ export default function ModalCadastroProjeto(props: Props) {
   const { open, setOpen, id } = props;
   const toast = useToastLoading();
   const [loading, setLoading] = useState<boolean>(true);
+
   const { handleSubmit, register, control, reset, getValues, setValue } =
     useForm<projeto>();
   const [salvando, setSalvando] = useState<boolean>(false);
   const [adicionarAtividadeOpen, setAdicionarAtividadeOpen] =
     useState<boolean>(false);
   const [dadosProjeto, setDadosProjeto] = useState<projeto>();
+  const [atividadeSelecionada, setAtividadeSelecionada] =
+    useState<atividade | null>(null);
+
   const [opcoesSelectPrioridade] = useState<Array<typeSelectOptions>>([
     {
       value: 1,
@@ -51,16 +58,34 @@ export default function ModalCadastroProjeto(props: Props) {
     },
   ]);
 
+  const { fields, move, remove, append, update } = useFieldArray({
+    control,
+    name: "atividades",
+  });
+
   const handleNovaAtividade = () => {
     setAdicionarAtividadeOpen(true);
   };
 
+  const handleAdicionaAtividade = (data: atividade) => {
+    if (atividadeSelecionada == null) {
+      append(data);
+      return;
+    }
+
+    const indexUpdate = fields.findIndex(
+      (x) => x.id == atividadeSelecionada.id
+    );
+    update(indexUpdate, data);
+  };
+
+
   useEffect(() => {
-    if (!!id) carregarDadosCurso();
+    if (!!id) carregarDadosProjeto();
     else setLoading(false);
   }, []);
 
-  async function carregarDadosCurso() {
+  async function carregarDadosProjeto() {
     setLoading(true);
     const response = await getProjetoById(Number(id));
 
@@ -75,10 +100,23 @@ export default function ModalCadastroProjeto(props: Props) {
   async function cadastrarProjeto() {
     setSalvando(true);
     let dadosCadastro: projeto;
-    await handleSubmit((dadosForm) => { dadosCadastro = { ...dadosForm, dataCadastro: new Date() }; })();
+
+    await handleSubmit((dadosForm) => {
+      dadosCadastro = {
+        ...dadosForm,
+        dataCadastro: new Date(),
+        atividades: dadosForm.atividades?.map<atividade>((dados) => {
+          return {
+            ...dados,
+            dataCadastro: new Date(),
+          };
+        }),
+      };
+    })();
 
     const request = () =>
       dadosProjeto?.id ? putProjeto(dadosCadastro) : postProjeto(dadosCadastro);
+
     const response = await request();
 
     if (response) {
@@ -174,37 +212,38 @@ export default function ModalCadastroProjeto(props: Props) {
             />
           </div>
 
-          {/* <ScrollArea className="h-60">
-          {listaProjetos.length > 0 && listaProjetos.map((item: projeto) => {
-            return 
-            <div className="w-full my-2 border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
-            <div className="flex items-center justify-between border-b-2">
-              <span className="text-lg text-primary-800 font-semibold">
-                Gerência de Projeto
-              </span>
-              <span className="text-primary-700 font-semibold">
-                01-01-2001
-              </span>
-            </div>
+          <ScrollArea className="h-60">
+            {fields.map((field) => {
+              return (
+                <>
+                  <div className="w-full my-2 border border-gray-300 col-span-1 rounded-lg p-3 shadow-md bg-gray-100">
+                    <div className="flex items-center justify-between border-b-2">
+                      <span className="text-lg text-primary-800 font-semibold">
+                        {field.titulo}
+                      </span>
+                      <span className="text-primary-700 font-semibold">
+                        {formatarData(field.dataCadastro || "", "data")}
+                      </span>
+                    </div>
 
-            <div className="text-xs py-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-              ut ad qui totam laboriosam fuga alias, beatae.
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="text-xs font-semibold">40hrs | 08h - 12h</div>
-              <Avatar.Root className="mt-2 bg-gray-100 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-                <Avatar.Image
-                  className="h-full w-full rounded-[inherit] object-cover"
-                  src={"imagens/user.png"}
-                  alt="Foto Usuário"
-                />
-              </Avatar.Root>
-            </div>
-          </div>;
-          })}
-            
-          </ScrollArea> */}
+                    <div className="text-xs py-2">{field.descricao}</div>
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-semibold">
+                        {field.totalHoras} Hrs | {field.horarioInicio}-{field.horarioFim}
+                      </div>
+                      <Avatar.Root className="mt-2 bg-gray-100 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle">
+                        <Avatar.Image
+                          className="h-full w-full rounded-[inherit] object-cover"
+                          src={"imagens/user.png"}
+                          alt="Foto Usuário"
+                        />
+                      </Avatar.Root>
+                    </div>
+                  </div>
+                </>
+              );
+            })}
+          </ScrollArea>
 
           <Botao
             carregando={salvando}
@@ -223,13 +262,12 @@ export default function ModalCadastroProjeto(props: Props) {
       </Box>
 
       <ModalCadastroAtividade
+        control={control}
         open={adicionarAtividadeOpen}
         setOpen={setAdicionarAtividadeOpen}
-        // control={control}
-        // disabled={salvando}
-        // register={register}
-        // getValues={getValues}
-        // setValue={setValue}
+        adicionaAtividade={handleAdicionaAtividade}
+        atividadeSelecionada={atividadeSelecionada}
+        setAtividadeSelecionada={setAtividadeSelecionada}
       />
     </Modal>
   );

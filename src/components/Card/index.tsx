@@ -75,7 +75,7 @@ export default function Card(props: Props) {
 
         <div className="flex items-center justify-between text-xs my-1">
           <div className="font-semibold">
-            40hrs | Total de atividades: {props.projeto.atividades?.length || 0}
+            { props.projeto.totalHrsAtividade } | Total de atividades: {props.projeto.atividades?.length || 0}
           </div>
           <span className="text-primary-700 font-semibold">
             {formatarData(props.projeto.dataCadastro || "", "data")}

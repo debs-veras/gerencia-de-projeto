@@ -19,11 +19,18 @@ export default function LayoutDashboard(): JSX.Element {
   const [fotoUrl] = useState<string | null>("imagens/user.png");
   const [menu] = useState<Array<ItemMenu>>([
     {
-      descricao: "teste",
-      link: "teste",
+      descricao: "Projetos",
+      link: "/",
       icone: "FaHome",
       ativo: true,
-      caminho: "teste caminho",
+      caminho: "/",
+    },
+    {
+      descricao: "Usuários",
+      link: "/usuarios",
+      icone: "FaUsers",
+      ativo: true,
+      caminho: "/",
     },
   ]);
 

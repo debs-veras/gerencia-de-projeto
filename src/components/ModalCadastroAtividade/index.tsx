@@ -1,17 +1,60 @@
 import Modal from "../../components/Modal";
 import Formulario from "../../components/Input";
 import Box from "../Box";
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import Botao from "../Button";
+import { atividade } from "../../types/atividade.d";
+import { useEffect, useState } from "react";
+import { projeto } from "../../types/projeto.d";
 
 type Props = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  adicionaAtividade: (atividade: atividade) => void;
+  atividadeSelecionada: atividade | null;
+  setAtividadeSelecionada: React.Dispatch<
+    React.SetStateAction<atividade | null>
+  > | null;
+  control: Control<projeto>,
 };
 
 export default function ModalCadastroAtividade(props: Props) {
-  const { open, setOpen } = props;
-  const methods = useForm();
+  const {
+    open,
+    setOpen,
+    adicionaAtividade,
+    atividadeSelecionada,
+    setAtividadeSelecionada,
+    control
+  } = props;
+  const [id, setId] = useState(atividadeSelecionada?.id || 0);
+
+  const [salvandoCadastro, setSalvandoCadastro] = useState<boolean>(false);
+  const { register, handleSubmit, reset } = useForm<atividade>();
+
+  const limparDados = () => {
+    setAtividadeSelecionada && setAtividadeSelecionada(null);
+    setId(0);
+  };
+
+  useEffect(() => {
+    if (atividadeSelecionada) reset({ ...atividadeSelecionada });
+
+    if (!open) limparDados();
+  }, [atividadeSelecionada]);
+
+  async function handleSalvarAtividade(): Promise<void> {
+    setSalvandoCadastro(true);
+    let dadosAtividade: atividade = {} as any;
+
+    await handleSubmit((dadosForm) => {
+      dadosAtividade = { ...dadosForm };
+    })();
+
+    setOpen(false);
+    setSalvandoCadastro(false);
+    adicionaAtividade(dadosAtividade);
+  }
 
   return (
     <Modal
@@ -33,7 +76,8 @@ export default function ModalCadastroAtividade(props: Props) {
             opcional={false}
             className="col-span-1"
             isFiltro
-            register={methods.register}
+            register={register}
+            disabled={salvandoCadastro}
           />
 
           <div className="grid md:grid-cols-2 col-span-1 gap-4">
@@ -43,7 +87,7 @@ export default function ModalCadastroAtividade(props: Props) {
               opcional={false}
               className="col-span-1"
               isFiltro
-              control={methods.control}
+              control={control}
             />
             <div className="grid md:grid-cols-2 w-full gap-4">
               <Formulario.InputHorario
@@ -52,7 +96,7 @@ export default function ModalCadastroAtividade(props: Props) {
                 opcional={false}
                 className="col-span-1"
                 isFiltro
-                control={methods.control}
+                register={register}
               />
               <Formulario.InputHorario
                 name="hr-fim"
@@ -60,7 +104,7 @@ export default function ModalCadastroAtividade(props: Props) {
                 opcional={false}
                 className="col-span-1"
                 isFiltro
-                control={methods.control}
+                register={register}
               />
             </div>
           </div>
@@ -69,8 +113,9 @@ export default function ModalCadastroAtividade(props: Props) {
             name="descricao"
             label="Descrição"
             opcional={false}
-            register={methods.register}
+            register={register}
             className="col-span-1"
+            disabled={salvandoCadastro}
           />
 
           <Botao
@@ -79,7 +124,11 @@ export default function ModalCadastroAtividade(props: Props) {
             onClick={() => setOpen(false)}
           />
 
-          <Botao texto="Salvar" tipo="sucesso" />
+          <Botao
+            texto="Salvar"
+            tipo="sucesso"
+            onClick={() => handleSalvarAtividade()}
+          />
         </Formulario>
       </Box>
     </Modal>
