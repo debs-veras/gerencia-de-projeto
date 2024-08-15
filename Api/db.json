@@ -27,7 +27,7 @@
         "label": "Alta"
       },
       "prioridadeId": 1,
-      "dataCadastro": "2024-08-15T14:59:06.227Z",
+      "dataCadastro": "2024-08-15T19:41:21.705Z",
       "totalHrsAtividade": 40,
       "participantes": [
         {
@@ -48,7 +48,7 @@
           "horarioFim": "17:30",
           "idParticipante": 1,
           "totalHoras": 20,
-          "dataCadastro": "2024-08-15T14:59:06.227Z",
+          "dataCadastro": "2024-08-15T19:41:21.705Z",
           "participante": {
             "id": 1,
             "nome": "Débora",
@@ -58,7 +58,8 @@
             "confirmacaoSenha": "1234"
           }
         }
-      ]
+      ],
+      "data": "2024-08-15"
     }
   ],
   "atividades": [
